@@ -1,0 +1,66 @@
+<html>
+<head>
+
+</head>
+<body>
+<h1 style="text-align:center">WsChat over Node.js</h1>
+<div id='chatscreen' style='width:100%;border:1px solid black;min-height:100px'></div>
+<form >
+<input style='width:90%' id='chatbox' placeholder='enter your text here' />
+<input type=submit id='submit' value='send' onclick="return send_chat();" />
+<input type=button id='close' value='close' onclick="return close_chat();">
+</form>
+<script>
+var encodedStr = function(rawStr){
+	return	rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+   return '&#'+i.charCodeAt(0)+';';
+});
+}
+var websocket1 = new WebSocket("ws://"+window.location.host+":8002");
+websocket1.onopen = function (event) { 
+};
+box=(document).getElementById("chatscreen");
+close_chat=function(){
+console.log(websocket1['readyState']);
+if(1==websocket1.readyState){
+websocket1.close();
+box.innerHTML= box.innerHTML+'<div style="text-align:center;"><b>SERVER:</b>You closed the chat. Please refresh to connect to other</div>';
+}
+}
+send_chat=function(){
+status=websocket1.readyState
+if( 1==status){
+data=(document).getElementById("chatbox").value;
+console.log(data);
+websocket1.send(data); 
+
+box.innerHTML= box.innerHTML+'<div style="text-align:right;"><b>You:</b>'+encodedStr(data)+'</div>';
+(document).getElementById("chatbox").value="";
+return false;
+}else{
+	if(0==status){
+		box.innerHTML= box.innerHTML+'<div style="text-align:CENTER;"><b>SERVER:</b>Connection not ready, Wait.</div>';
+	}else{
+			box.innerHTML= box.innerHTML+'<div style="text-align:CENTER;"><b>SERVER:</b>Connection closed</div>';
+	}
+}
+}
+//document.onmousemove = function (event){
+// 	websocket1.send(JSON.stringify({
+//  	"ScreenSize":{
+//  			"Width":window.innerWidth,
+//  			"Height":window.innerHeight
+//  		},
+//  	"CursorPos":{
+//  			"Left":event.clientX,
+//  			"Top":event.clientY
+//  	}
+//  }));
+//}
+websocket1.onmessage = function (event) {
+  box.innerHTML= box.innerHTML+'<div style="text-align:left"><b>Stranger:</b>'+encodedStr(event.data)+'</div>';
+}
+console.log(websocket1);
+</script>
+</body>
+</html>
