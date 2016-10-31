@@ -1,0 +1,38 @@
+{
+  "name": "ws-chat-nodejs",
+  "version": "1.0.0",
+  "description": "Anonymos chat on Google cloud",
+  "repository": "https://github.com/anshu2212/ws-chat-nodejs",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "monitor": "nodemon app.js",
+    "deploy": "gcloud app deploy app.yaml",
+  },
+  "author": "Ashutosh Raj",
+  "contributors": [
+    {
+      "name": "Ashutosh Raj",
+      "email": "anshu2212@gmail.com"
+    }
+  ],
+  "license": "MIT License",
+  "semistandard": {
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
+  },
+  "dependencies": {
+	"ws": "^1.1.1"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=4.3.2"
+  }
+}
