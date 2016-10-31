@@ -1,8 +1,40 @@
-console.log("Server started");
 var clients=[];
 var connected_clients=[];
 var active_client=[];
 var Msg = '';
+const http = require('http')  
+const port = 8080
+const fs = require('fs')
+const path= require('path')
+const url = require('url');
+
+
+const requestHandler = (request, response) => {  
+	urlpath=url.parse(request.url).pathname
+  console.log(urlpath)
+  if('/'===urlpath){
+fs.readFile(path.join(__dirname,'wschat.html'),'UTF-8' ,function (err, data) {
+	  if (err) throw err;
+	  response.end(data);
+	});
+	}else{
+		response.writeHead(404);
+		response.end("NOT FOUND");
+	}
+}
+
+const server = http.createServer(requestHandler)
+
+server.listen(port, (err) => {  
+  if (err) {
+    return console.log('something bad happened', err)
+  }
+
+  console.log(`server is listening on ${port}`)
+});
+
+
+console.log("chat Server starting");
 var WebSocketServer = require('ws').Server
     , wss = new WebSocketServer({port: 8002});
     
